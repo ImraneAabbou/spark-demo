@@ -1,0 +1,32 @@
+[('spark.driver.extraJavaOptions', '-Djava.net.preferIPv6Addresses=false -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED -Djdk.reflect.useDirectMethodHandle=false'), ('spark.ui.showConsoleProgress', 'false'), ('spark.app.name', 'Lab1_hello_spark'), ('spark.executor.id', 'driver'), ('spark.sql.warehouse.dir', 'file:/content/spark-warehouse'), ('spark.driver.host', '23d1d0e643d2'), ('spark.app.submitTime', '1763583888441'), ('spark.driver.port', '42159'), ('spark.rdd.compress', 'True'), ('spark.executor.extraJavaOptions', '-Djava.net.preferIPv6Addresses=false -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED -Djdk.reflect.useDirectMethodHandle=false'), ('spark.serializer.objectStreamReset', '100'), ('spark.master', 'local[*]'), ('spark.submit.pyFiles', ''), ('spark.submit.deployMode', 'client'), ('spark.app.id', 'local-1763588723655'), ('spark.app.startTime', '1763588723596')]
+root
+ |-- Department: string (nullable = true)
+ |-- ID: long (nullable = true)
+ |-- Amount: double (nullable = true)
+
++-----------+---+------+
+| Department| ID|Amount|
++-----------+---+------+
+|      Sales|  1| 100.0|
+|      Sales|  2| 150.0|
+|Engineering|  3| 200.0|
+|Engineering|  4| 120.0|
+|         HR|  5| 180.0|
++-----------+---+------+
+only showing top 5 rows
+
++-----------+------------+------------------+-------------+
+| Department|Total_Amount|        Avg_Amount|Num_Employees|
++-----------+------------+------------------+-------------+
+|      Sales|       340.0|113.33333333333333|            3|
+|Engineering|       320.0|             160.0|            2|
+|         HR|       180.0|             180.0|            1|
++-----------+------------+------------------+-------------+
+
++-----------+---+------+
+| Department| ID|Amount|
++-----------+---+------+
+|Engineering|  3| 200.0|
+|         HR|  5| 180.0|
++-----------+---+------+
+
