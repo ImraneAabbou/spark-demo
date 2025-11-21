@@ -1,8 +1,9 @@
-
 services:
   spark-master:
     image: apache/spark:4.1.0-preview3-python3
     container_name: spark-master
+    environment:
+      - PYTHONPATH=/opt/spark/python:/opt/spark/python/lib/py4j-0.10.9.9-src.zip
     command: >
       /opt/spark/bin/spark-class
       org.apache.spark.deploy.master.Master
@@ -12,8 +13,11 @@ services:
     ports:
       - "7077:7077"
       - "8080:8080"
+      - "4040:4040"
+    volumes:
+      - ./:/opt/spark/work-dir/
 
-  spark-worker-1:
+  spark-worker:
     image: apache/spark:4.1.0-preview3-python3
     container_name: spark-worker-1
     depends_on:
@@ -24,16 +28,5 @@ services:
       spark://spark-master:7077
     ports:
       - "8081:8081"
-
-  spark-worker-2:
-    image: apache/spark:4.1.0-preview3-python3
-    container_name: spark-worker-2
-    depends_on:
-      - spark-master
-    command: >
-      /opt/spark/bin/spark-class
-      org.apache.spark.deploy.worker.Worker
-      spark://spark-master:7077
-    ports:
-      - "8082:8081"
-
+    volumes:
+      - ./:/opt/spark/work-dir/
