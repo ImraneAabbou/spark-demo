@@ -1,0 +1,105 @@
+
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/24 23:39:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+=== Action 1 — count() ===
+Total customers: 50
+Enterprise customers: 25
+====================
+=== Action 2 — show() ===
+Default show() (20 rows, truncated):
++-----------+------------+--------------------+--------+-------------+-------+--------------+
+|customer_id|customerName|               email|   phone|         city|country|  customerType|
++-----------+------------+--------------------+--------+-------------+-------+--------------+
+|          1|       Alice|  alice1@example.com|555-0101|     New York|    USA|    Enterprise|
+|          2|         Bob|    bob2@example.com|555-0102|  Los Angeles|    USA|Small Business|
+|          3|     Charlie|charlie3@example.com|555-0103|      Chicago|    USA|    Enterprise|
+|          4|       David|  david4@example.com|555-0104|      Houston|    USA|Small Business|
+|          5|         Eve|    eve5@example.com|555-0105|        Miami|    USA|    Enterprise|
+|          6|       Frank|  frank6@example.com|555-0106|       Boston|    USA|Small Business|
+|          7|       Grace|  grace7@example.com|555-0107|      Seattle|    USA|    Enterprise|
+|          8|        Hank|   hank8@example.com|555-0108|       Denver|    USA|Small Business|
+|          9|         Ivy|    ivy9@example.com|555-0109|      Atlanta|    USA|    Enterprise|
+|         10|        Jack|  jack10@example.com|555-0110|San Francisco|    USA|Small Business|
+|         11|        Kate|  kate11@example.com|555-0111|     Portland|    USA|    Enterprise|
+|         12|        Liam|  liam12@example.com|555-0112|      Orlando|    USA|Small Business|
+|         13|         Mia|   mia13@example.com|555-0113|       Dallas|    USA|    Enterprise|
+|         14|        Noah|  noah14@example.com|555-0114|      Phoenix|    USA|Small Business|
+|         15|      Olivia|olivia15@example.com|555-0115| Philadelphia|    USA|    Enterprise|
+|         16|        Paul|  paul16@example.com|555-0116|  Minneapolis|    USA|Small Business|
+|         17|       Quinn| quinn17@example.com|555-0117|      Detroit|    USA|    Enterprise|
+|         18|      Rachel|rachel18@example.com|555-0118|    San Diego|    USA|Small Business|
+|         19|         Sam|   sam19@example.com|555-0119|       Austin|    USA|    Enterprise|
+|         20|        Tina|  tina20@example.com|555-0120|     Columbus|    USA|Small Business|
++-----------+------------+--------------------+--------+-------------+-------+--------------+
+only showing top 20 rows
+show(5, truncate=False):
++-----------+------------+--------------------+--------+-----------+-------+--------------+
+|customer_id|customerName|email               |phone   |city       |country|customerType  |
++-----------+------------+--------------------+--------+-----------+-------+--------------+
+|1          |Alice       |alice1@example.com  |555-0101|New York   |USA    |Enterprise    |
+|2          |Bob         |bob2@example.com    |555-0102|Los Angeles|USA    |Small Business|
+|3          |Charlie     |charlie3@example.com|555-0103|Chicago    |USA    |Enterprise    |
+|4          |David       |david4@example.com  |555-0104|Houston    |USA    |Small Business|
+|5          |Eve         |eve5@example.com    |555-0105|Miami      |USA    |Enterprise    |
++-----------+------------+--------------------+--------+-----------+-------+--------------+
+only showing top 5 rows
+show(3, vertical=True):
+-RECORD 0----------------------------
+ customer_id  | 1                    
+ customerName | Alice                
+ email        | alice1@example.com   
+ phone        | 555-0101             
+ city         | New York             
+ country      | USA                  
+ customerType | Enterprise           
+-RECORD 1----------------------------
+ customer_id  | 2                    
+ customerName | Bob                  
+ email        | bob2@example.com     
+ phone        | 555-0102             
+ city         | Los Angeles          
+ country      | USA                  
+ customerType | Small Business       
+-RECORD 2----------------------------
+ customer_id  | 3                    
+ customerName | Charlie              
+ email        | charlie3@example.com 
+ phone        | 555-0103             
+ city         | Chicago              
+ country      | USA                  
+ customerType | Enterprise           
+only showing top 3 rows
+====================
+=== Action 3 — collect() ===
+Warning: collect() brings all data to driver. Only safe on small datasets!
+
+Type of small_sample: <class 'list'>
+Type of first element: <class 'pyspark.sql.types.Row'>
+Sample values:
+customerName=Alice, country=USA
+customerName=Bob, country=USA
+customerName=Charlie, country=USA
+====================
+=== Action 4 — take(n) ===
+Alice (USA)
+Bob (USA)
+Charlie (USA)
+David (USA)
+Eve (USA)
+====================
+=== Action 5 — first() and head() ===
+first() customerName: Alice
+head() customerName: Alice
+Note: first() and head() return the same first row of the DataFrame.
+====================
+
+=== Action 6 — write ===
+USA customers written as single CSV (overwrite mode).
+All customers written as Parquet (overwrite mode).
+====================
+=== Action 7 — foreachPartition() ===
+Partition size: 50 rows
+foreachPartition executed. Partition sizes printed (may interleave in console).

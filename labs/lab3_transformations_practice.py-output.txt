@@ -1,0 +1,51 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/24 23:40:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+High values: 40
++-----------+----------+-----------+---------+-----------+
+|orderNumber| orderDate|totalAmount|   status|customer_id|
++-----------+----------+-----------+---------+-----------+
+|          1|2024-01-15|     523.45|  SHIPPED|    CUST001|
+|          2|2023-12-22|      245.3|  PENDING|    CUST002|
+|          3|2024-06-05|     899.99|DELIVERED|    CUST003|
+|          6|2023-08-27|      430.1|DELIVERED|    CUST006|
+|          7|2024-04-01|     650.75|  PENDING|    CUST007|
++-----------+----------+-----------+---------+-----------+
+only showing top 5 rows
++---+----------+------+---------+-----------+
+| id| orderDate|amount|   status|customer_id|
++---+----------+------+---------+-----------+
+|  1|2024-01-15|523.45|  SHIPPED|    CUST001|
+|  2|2023-12-22| 245.3|  PENDING|    CUST002|
+|  3|2024-06-05|899.99|DELIVERED|    CUST003|
+|  4|2023-11-18| 120.5|CANCELLED|    CUST004|
+|  5|2024-03-10|  75.2|  SHIPPED|    CUST005|
++---+----------+------+---------+-----------+
+only showing top 5 rows
++-----------+----------+-----------+-------+-----------+-----+--------+
+|orderNumber| orderDate|totalAmount| status|customer_id|     |priority|
++-----------+----------+-----------+-------+-----------+-----+--------+
+|          1|2024-01-15|     523.45|SHIPPED|    CUST001|523.0|    HIGH|
+|          5|2024-03-10|       75.2|SHIPPED|    CUST005| 75.0|     LOW|
+|          8|2024-02-18|      310.0|SHIPPED|    CUST008|310.0|     LOW|
+|         11|2024-01-22|       80.5|SHIPPED|    CUST011| 81.0|     LOW|
+|         14|2023-09-30|      345.2|SHIPPED|    CUST014|345.0|     LOW|
+|         18|2023-11-25|      530.4|SHIPPED|    CUST018|530.0|    HIGH|
+|         21|2024-02-28|      450.5|SHIPPED|    CUST001|451.0|     LOW|
+|         24|2023-08-21|      210.2|SHIPPED|    CUST004|210.0|     LOW|
+|         27|2024-04-22|     499.95|SHIPPED|    CUST007|500.0|     LOW|
+|         30|2023-12-28|      340.4|SHIPPED|    CUST010|340.0|     LOW|
++-----------+----------+-----------+-------+-----------+-----+--------+
+only showing top 10 rows
+Cols before removing is 7 after removing bcmz 5
++-----------+----------+-----------+-------+-----------+------------+-----------+
+|orderNumber| orderDate|totalAmount| status|customer_id|isLargeOrder|  orderCode|
++-----------+----------+-----------+-------+-----------+------------+-----------+
+|         32|2024-06-01|      610.5|PENDING|    CUST012|        true|ORDER-00032|
+|         50|2024-07-10|      610.0|PENDING|    CUST010|        true|ORDER-00050|
+|         10|2024-07-03|     499.99|PENDING|    CUST010|        true|ORDER-00010|
+|         23|2024-06-18|       75.0|PENDING|    CUST003|       false|ORDER-00023|
++-----------+----------+-----------+-------+-----------+------------+-----------+
+

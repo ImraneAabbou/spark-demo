@@ -1,0 +1,29 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/24 23:40:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Transformation 1: Filter 'Enterprise' → Defined, but NOT executed yet
+Transformation 2: Select subset of columns → Defined, but NOT executed yet
+Transformation 3: Add column customerNameUpper → Defined, but NOT executed yet
+Triggering three actions on the final DataFrame...
+count(): 25
+show(5, truncate=False):
++------------+--------+--------+-------+-----------------+
+|customerName|phone   |city    |country|customerNameUpper|
++------------+--------+--------+-------+-----------------+
+|Alice       |555-0101|New York|USA    |ALICE            |
+|Charlie     |555-0103|Chicago |USA    |CHARLIE          |
+|Eve         |555-0105|Miami   |USA    |EVE              |
+|Grace       |555-0107|Seattle |USA    |GRACE            |
+|Ivy         |555-0109|Atlanta |USA    |IVY              |
++------------+--------+--------+-------+-----------------+
+only showing top 5 rows
+limit(5).collect() [Row(customerName='Alice', phone='555-0101', city='New York', country='USA', customerNameUpper='ALICE'), Row(customerName='Charlie', phone='555-0103', city='Chicago', country='USA', customerNameUpper='CHARLIE'), Row(customerName='Eve', phone='555-0105', city='Miami', country='USA', customerNameUpper='EVE'), Row(customerName='Grace', phone='555-0107', city='Seattle', country='USA', customerNameUpper='GRACE'), Row(customerName='Ivy', phone='555-0109', city='Atlanta', country='USA', customerNameUpper='IVY')]
+Summary: 
+What a transformation is: transformation is a logical step or layer that are stacked with no execution. until an action is called it performs all the previous transformations and this manner called lazy as we only execute the whole process only when we need it avoiding calculation redundancy and have a control over the transformations layers/steps for optimization algorithms in libraries or frameworks.
+
+Task A.2: 
+How many jobs are triggered: 5 jobs are triggered in this scirpt, while the first job is for internal needed setup for our spark session & context, the remaining 4 jobs are for the actions ( count , show , collect ) knowing that the show actions uses internally another action which makes it in total 4 triggered jobs.
+    
+Click enter to continue...

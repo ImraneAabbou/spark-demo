@@ -1,0 +1,51 @@
+customer_id,customerName,email,phone,city,country,customerType
+1,Alice,alice1@example.com,555-0101,New York,USA,Enterprise
+2,Bob,bob2@example.com,555-0102,Los Angeles,USA,Small Business
+3,Charlie,charlie3@example.com,555-0103,Chicago,USA,Enterprise
+4,David,david4@example.com,555-0104,Houston,USA,Small Business
+5,Eve,eve5@example.com,555-0105,Miami,USA,Enterprise
+6,Frank,frank6@example.com,555-0106,Boston,USA,Small Business
+7,Grace,grace7@example.com,555-0107,Seattle,USA,Enterprise
+8,Hank,hank8@example.com,555-0108,Denver,USA,Small Business
+9,Ivy,ivy9@example.com,555-0109,Atlanta,USA,Enterprise
+10,Jack,jack10@example.com,555-0110,San Francisco,USA,Small Business
+11,Kate,kate11@example.com,555-0111,Portland,USA,Enterprise
+12,Liam,liam12@example.com,555-0112,Orlando,USA,Small Business
+13,Mia,mia13@example.com,555-0113,Dallas,USA,Enterprise
+14,Noah,noah14@example.com,555-0114,Phoenix,USA,Small Business
+15,Olivia,olivia15@example.com,555-0115,Philadelphia,USA,Enterprise
+16,Paul,paul16@example.com,555-0116,Minneapolis,USA,Small Business
+17,Quinn,quinn17@example.com,555-0117,Detroit,USA,Enterprise
+18,Rachel,rachel18@example.com,555-0118,San Diego,USA,Small Business
+19,Sam,sam19@example.com,555-0119,Austin,USA,Enterprise
+20,Tina,tina20@example.com,555-0120,Columbus,USA,Small Business
+21,Uma,uma21@example.com,555-0121,Charlotte,USA,Enterprise
+22,Victor,victor22@example.com,555-0122,Indianapolis,USA,Small Business
+23,Wendy,wendy23@example.com,555-0123,Jacksonville,USA,Enterprise
+24,Xander,xander24@example.com,555-0124,Memphis,USA,Small Business
+25,Yara,yara25@example.com,555-0125,Milwaukee,USA,Enterprise
+26,Zane,zane26@example.com,555-0126,Baltimore,USA,Small Business
+27,Aaron,aaron27@example.com,555-0127,Las Vegas,USA,Enterprise
+28,Bella,bella28@example.com,555-0128,Nashville,USA,Small Business
+29,Carl,carl29@example.com,555-0129,Raleigh,USA,Enterprise
+30,Diana,diana30@example.com,555-0130,Richmond,USA,Small Business
+31,Elena,elena31@example.com,555-0131,Oklahoma City,USA,Enterprise
+32,Felix,felix32@example.com,555-0132,Louisville,USA,Small Business
+33,Gina,gina33@example.com,555-0133,Buffalo,USA,Enterprise
+34,Hugo,hugo34@example.com,555-0134,Albuquerque,USA,Small Business
+35,Iris,iris35@example.com,555-0135,Tucson,USA,Enterprise
+36,Jason,jason36@example.com,555-0136,Fresno,USA,Small Business
+37,Karen,karen37@example.com,555-0137,Sacramento,USA,Enterprise
+38,Luke,luke38@example.com,555-0138,Kansas City,USA,Small Business
+39,Molly,molly39@example.com,555-0139,Colorado Springs,USA,Enterprise
+40,Nate,nate40@example.com,555-0140,Long Beach,USA,Small Business
+41,Olga,olga41@example.com,555-0141,Mesa,USA,Enterprise
+42,Peter,peter42@example.com,555-0142,Virginia Beach,USA,Small Business
+43,Queen,queen43@example.com,555-0143,Omaha,USA,Enterprise
+44,Roy,roy44@example.com,555-0144,Oakland,USA,Small Business
+45,Sara,sara45@example.com,555-0145,Minneapolis,USA,Enterprise
+46,Tom,tom46@example.com,555-0146,Miami,USA,Small Business
+47,Una,una47@example.com,555-0147,Atlanta,USA,Enterprise
+48,Vin,vince48@example.com,555-0148,Denver,USA,Small Business
+49,Willa,willa49@example.com,555-0149,Chicago,USA,Enterprise
+50,Xena,xena50@example.com,555-0150,New York,USA,Small Business
