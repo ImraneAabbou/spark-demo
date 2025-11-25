@@ -1,0 +1,136 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 19:50:03 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+ADVANCED AGGREGATIONS
+======================================================================
+[Stage 0:>                                                          (0 + 1) / 1]                                                                                
+[AGGREGATION 1] Basic statistics
+
+Total Orders: 5,000
+Total Revenue: $25,662,344.53
+Average Order: $5132.47
+Min Order: $104.51
+Max Order: $9996.94
+Std Deviation: $2879.64
+
+[AGGREGATION 2] Statistics by status
+
+[Stage 7:>                                                          (0 + 2) / 2]                                                                                
+Cancelled:
+ Count: 1,287
+ Total: $6,632,473.66
+ Average: $5153.44
+ Min: $115.34
+ Max: $9996.94
+ Variance: 8136113.99
+
+On Hold:
+ Count: 1,253
+ Total: $6,527,099.85
+ Average: $5209.18
+ Min: $110.97
+ Max: $9968.55
+ Variance: 8676941.48
+
+Processing:
+ Count: 1,206
+ Total: $6,207,744.97
+ Average: $5147.38
+ Min: $104.51
+ Max: $9995.78
+ Variance: 8358784.80
+
+Shipped:
+ Count: 1,254
+ Total: $6,295,026.05
+ Average: $5019.96
+ Min: $112.98
+ Max: $9979.14
+ Variance: 7985257.63
+
+[AGGREGATION 3] Monthly revenue trends
+
+Monthly Revenue:
+ 2024-01: $2,412,855.93
+ 2024-02: $2,452,385.36
+ 2024-03: $2,020,710.04
+ 2024-04: $2,507,846.94
+ 2024-05: $2,214,441.64
+ 2024-06: $2,403,654.59
+ 2024-07: $2,455,641.47
+ 2024-08: $2,306,950.13
+ 2024-09: $2,435,036.84
+ 2024-10: $2,468,131.90
+ 2024-11: $1,984,689.69
+
+[AGGREGATION 4] Order amount percentiles
+
+25th percentile: $2680.40
+50th percentile (median): $5142.14
+75th percentile: $7666.55
+95th percentile: $9545.78
+
+[AGGREGATION 5] RFM Analysis (Recency, Frequency, Monetary)
+
+Sample RFM scores:
+ Customer  674: R=277d, F= 3 orders, M=$17,879.30
+ Customer   58: R=321d, F= 5 orders, M=$28,082.47
+ Customer  914: R=333d, F= 5 orders, M=$19,450.05
+ Customer  774: R=299d, F= 6 orders, M=$27,128.58
+ Customer  644: R=192d, F= 5 orders, M=$33,070.24
+ Customer  874: R=327d, F= 4 orders, M=$18,188.03
+ Customer  242: R=260d, F= 3 orders, M=$15,395.44
+ Customer  160: R=331d, F= 4 orders, M=$17,666.35
+ Customer  704: R=322d, F= 3 orders, M=$23,540.00
+ Customer   50: R=320d, F=10 orders, M=$52,394.25
+
+RFM Segments:
+ Loyal          :  567 customers
+ Potential      :  396 customers
+ At Risk        :   25 customers
+
+[AGGREGATION 6] Cohort analysis by first purchase month
+
+[Stage 42:===========================================>              (3 + 1) / 4]                                                                                Revenue by customer cohort (first purchase month):
+ 2024-01 cohort: $11,445,294.45
+ 2024-02 cohort: $6,219,267.31
+ 2024-03 cohort: $3,259,614.68
+ 2024-04 cohort: $2,319,120.60
+ 2024-05 cohort: $1,116,106.90
+ 2024-06 cohort: $589,838.96
+ 2024-07 cohort: $308,656.90
+ 2024-08 cohort: $228,851.11
+ 2024-09 cohort: $106,923.79
+ 2024-10 cohort: $ 41,162.39
+ 2024-11 cohort: $ 27,507.44
+
+[AGGREGATION 7] Cumulative revenue over time
+
+Sample cumulative revenue (first 10 days):
+ 2024-01-01: $89,494.58 (cumulative: $   89,494.58)
+ 2024-01-02: $91,101.63 (cumulative: $  180,596.21)
+ 2024-01-03: $103,880.38 (cumulative: $  284,476.59)
+ 2024-01-04: $42,337.13 (cumulative: $  326,813.72)
+ 2024-01-05: $84,438.36 (cumulative: $  411,252.08)
+ 2024-01-06: $89,396.79 (cumulative: $  500,648.87)
+ 2024-01-07: $39,673.36 (cumulative: $  540,322.23)
+ 2024-01-08: $105,195.32 (cumulative: $  645,517.55)
+ 2024-01-09: $78,468.08 (cumulative: $  723,985.63)
+ 2024-01-10: $60,308.33 (cumulative: $  784,293.96)
+
+======================================================================
+AGGREGATION SUMMARY
+======================================================================
+
+Key Aggregation Techniques:
+1. Basic statistics: sum(), mean(), min(), max(), stdev()
+2. Group statistics: aggregateByKey() for complex metrics
+3. Time-based: Group by date/month for trends
+4. Percentiles: Sort and index for distribution analysis
+5. RFM: Recency, Frequency, Monetary for segmentation
+6. Cohort: Track customer groups over time
+7. Running totals: Accumulate metrics sequentially
+

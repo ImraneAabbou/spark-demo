@@ -1,0 +1,147 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 19:50:21 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+JOIN OPERATIONS
+======================================================================
+[Stage 0:>                                                          (0 + 0) / 1][Stage 0:>                                                          (0 + 1) / 1]                                                                                Customers: 1000
+Orders: 5000
+
+[JOIN 1] Inner Join - Orders with customer info
+
+Sample joined records:
+[Stage 4:>                                                          (0 + 4) / 4]                                                                                 Customer 4: First4 Last4                   | Order #645: $1981.02
+ Customer 4: First4 Last4                   | Order #883: $8038.49
+ Customer 4: First4 Last4                   | Order #2314: $5476.72
+ Customer 4: First4 Last4                   | Order #2449: $1679.82
+ Customer 4: First4 Last4                   | Order #2698: $7369.07
+
+Total joined records: 5000
+Note: Only customers WITH orders are included
+
+[JOIN 2] Left Outer Join - All customers, with/without orders
+
+[Stage 8:=============================>                             (2 + 2) / 4]                                                                                Customers WITH orders: 5000
+Customers WITHOUT orders: 12
+
+Sample customers without orders:
+ Customer 192: First192 Last192               from Vancouver
+ Customer 336: First336 Last336               from Melbourne
+ Customer 400: First400 Last400               from Montreal
+ Customer 580: First580 Last580               from Hamburg
+ Customer 952: First952 Last952               from New York
+
+[JOIN 3] Right Outer Join - All orders, even without customer data
+
+[Stage 14:=============================>                            (2 + 2) / 4]                                                                                Total records: 5012
+Orphaned orders (no customer): 12
+
+[JOIN 4] Full Outer Join - Everything
+
+Records with both customer and order: 5000
+Records with only customer: 12
+Records with only order: 0
+
+[JOIN 5] Cartesian Join - All combinations
+
+[Stage 26:>                                                        (1 + 8) / 64][Stage 26:===>                                                     (4 + 8) / 64][Stage 26:======>                                                  (7 + 8) / 64][Stage 26:=======>                                                 (8 + 8) / 64][Stage 26:==========>                                             (12 + 8) / 64][Stage 26:============>                                           (14 + 8) / 64][Stage 26:==============>                                         (17 + 8) / 64][Stage 26:================>                                       (19 + 8) / 64][Stage 26:==================>                                     (21 + 8) / 64][Stage 26:======================>                                 (26 + 8) / 64][Stage 26:========================>                               (28 + 8) / 64][Stage 26:===========================>                            (31 + 7) / 64][Stage 26:==============================>                         (35 + 8) / 64][Stage 26:===============================>                        (36 + 8) / 64][Stage 26:====================================>                   (42 + 9) / 64][Stage 26:=====================================>                  (43 + 8) / 64][Stage 26:==========================================>             (48 + 8) / 64][Stage 26:============================================>           (51 + 8) / 64][Stage 26:================================================>       (55 + 8) / 64][Stage 26:=================================================>      (57 + 7) / 64][Stage 26:=====================================================>  (61 + 3) / 64]                                                                                Cartesian result size: 9
+(3 customers × 3 orders = 9 combinations)
+
+Sample combinations:
+[Stage 29:==============>                                          (5 + 8) / 20][Stage 29:======================>                                  (8 + 8) / 20][Stage 29:============================>                           (10 + 8) / 20][Stage 29:====================================>                   (13 + 7) / 20][Stage 29:===============================================>        (17 + 3) / 20]                                                                                 Customer 1 + Order from customer 777
+ Customer 1 + Order from customer 763
+ Customer 1 + Order from customer 674
+
+ WARNING: Cartesian joins are EXTREMELY EXPENSIVE!
+Use only on very small datasets or with filters
+
+[JOIN 6] Self Join - Find customers in same city
+
+Sample customers in same city:
+[Stage 30:===========================================>              (3 + 1) / 4]                                                                                 Marseille: First4 Last4 and First36 Last36
+ Marseille: First4 Last4 and First62 Last62
+ Marseille: First4 Last4 and First70 Last70
+ Marseille: First4 Last4 and First98 Last98
+ Marseille: First4 Last4 and First114 Last114
+
+[JOIN 7] Broadcast join optimization
+
+Broadcasted status map size: 4 entries
+
+Sample orders with descriptions:
+ Order #1: Cancelled    - Order was cancelled
+ Order #2: Processing   - Order is being processed
+ Order #3: Processing   - Order is being processed
+ Order #4: Processing   - Order is being processed
+ Order #5: Cancelled    - Order was cancelled
+
+ Broadcast join avoids shuffle (much faster for small datasets!)
+
+[JOIN 8] Three-way join example
+
+Multi-way joins involve chaining multiple join operations
+Example: orders -> customers -> payment_methods
+
+======================================================================
+PRACTICAL EXAMPLE: Complete Customer Analysis
+======================================================================
+
+Top 10 customers by total spending:
+[Stage 34:===========================================>              (3 + 1) / 4]                                                                                 First12 Last12                 | Sydney          | Enterprise |  11 orders | $ 79,870.48 total | $7,260.95 average
+ First40 Last40                 | Tokyo           | Premium    |  11 orders | $ 72,289.28 total | $6,571.75 average
+ First932 Last932               | Lyon            | Enterprise |  13 orders | $ 71,397.52 total | $5,492.12 average
+ First57 Last57                 | Osaka           | Premium    |  10 orders | $ 71,345.62 total | $7,134.56 average
+ First600 Last600               | Tokyo           | Regular    |  11 orders | $ 69,161.92 total | $6,287.45 average
+ First46 Last46                 | Osaka           | Enterprise |  12 orders | $ 64,820.94 total | $5,401.75 average
+ First144 Last144               | Kyoto           | Regular    |  10 orders | $ 62,016.02 total | $6,201.60 average
+ First457 Last457               | Montreal        | Regular    |   9 orders | $ 61,973.31 total | $6,885.92 average
+ First687 Last687               | Sydney          | Premium    |  12 orders | $ 61,843.36 total | $5,153.61 average
+ First968 Last968               | Toronto         | Regular    |  11 orders | $ 61,499.99 total | $5,590.91 average
+
+======================================================================
+PRACTICE EXERCISES
+======================================================================
+
+Complete these exercises:
+
+Run the script:
+
+python lab2_joins.py
+
+Practice Solutions
+
+Add these after the practice exercises section:
+1. Find customers with more than 5 orders
+2. Calculate total revenue by country (join required)
+3. Find customers in USA with total spending > $10,000
+4. Identify the top city by total order volume
+5. Find customers who have never placed an order (use left outer join)
+
+
+======================================================================
+PRACTICE SOLUTIONS
+======================================================================
+
+Solution 1: 370 customers with >5 orders
+Sample: [(777, 7), (763, 7), (895, 6), (127, 8), (774, 6)]
+
+Solution 2: Revenue by country (Top 5):
+ Canada         : $4,318,624.12
+ Australia      : $3,848,042.83
+ France         : $3,772,920.79
+ Japan          : $3,675,648.76
+ Germany        : $3,505,421.12
+[Stage 59:==============>                                           (1 + 3) / 4]                                                                                
+Solution 3: 117 USA customers with >$10,000 total spending
+[Stage 62:===========================================>              (3 + 1) / 4]                                                                                
+Solution 4: Top city: Montreal with $1,642,220.66 in total orders
+
+Solution 5: 12 customers never placed an order
+Sample:
+ Customer 192: First192 Last192
+ Customer 336: First336 Last336
+ Customer 400: First400 Last400
+ Customer 580: First580 Last580
+ Customer 952: First952 Last952

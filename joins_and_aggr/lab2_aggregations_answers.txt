@@ -1,0 +1,14 @@
+1. What's the difference between inner join and left outer join?
+Answer: the inner join keeps only records where the key exists in both datasets and the left outer join keeps all records from the left dataset, and adds matching records from the right; if no match exists, the right side becomes NULL.
+
+2. When should you use a broadcast join?
+Answer: Use a broadcast join when one dataset is small enough to fit in memory avoiding to shuffle the big dataset and drastically speeds up the join.
+
+3. What does RFM stand for and why is it useful?
+Answer: 
+
+4. What happens to records that don't match in an inner join?
+Answer: They are simply discarded. Only matching pairs survive.
+
+5. Why is cartesian join dangerous?
+Answer: This can explode into billions or trillions of combinations → extremely slow, memory-heavy, and can crash the cluster.
