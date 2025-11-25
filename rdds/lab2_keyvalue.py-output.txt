@@ -1,0 +1,154 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 19:09:12 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+KEY-VALUE RDD OPERATIONS
+======================================================================
+[Stage 0:>                                                          (0 + 0) / 1][Stage 0:>                                                          (0 + 1) / 1]                                                                                
+[OPERATION 1] Creating key-value pairs
+
+Sample pairs (customer_id, amount):
+ Customer 777: $7433.89
+ Customer 763: $6319.01
+ Customer 674: $1374.97
+ Customer 58: $4369.29
+ Customer 895: $6440.17
+
+[OPERATION 2] Extract keys and values
+
+Sample keys (customer IDs): [777, 763, 674, 58, 895, 391, 13, 127, 914, 313]
+Sample values (amounts):
+ $7433.89
+ $6319.01
+ $1374.97
+ $4369.29
+ $6440.17
+
+[OPERATION 3] mapValues() - Add 10% tax
+
+Sample with 10% tax:
+ Customer 777: $8177.28
+ Customer 763: $6950.91
+ Customer 674: $1512.47
+ Customer 58: $4806.22
+ Customer 895: $7084.19
+
+[OPERATION 4] reduceByKey() - Total per customer
+
+Top 10 customers by total spending:
+[Stage 5:>                                                          (0 + 2) / 2]                                                                                 Customer   12: $ 79,870.48
+ Customer   40: $ 72,289.28
+ Customer  932: $ 71,397.52
+ Customer   57: $ 71,345.62
+ Customer  600: $ 69,161.92
+ Customer   46: $ 64,820.94
+ Customer  144: $ 62,016.02
+ Customer  457: $ 61,973.31
+ Customer  687: $ 61,843.36
+ Customer  968: $ 61,499.99
+
+[OPERATION 5] groupByKey() - All orders per customer
+
+Sample grouped data:
+ Customer 674: 3 orders
+ Amounts: ['$1374.97', '$7518.28', '$8986.05']
+ Customer 58: 5 orders
+ Amounts: ['$4369.29', '$6327.99', '$8674.59', '$104.51', '$8606.09']
+ Customer 914: 5 orders
+ Amounts: ['$7010.02', '$629.44', '$2250.30', '$602.30', '$8957.99']
+
+⚠️ WARNING: groupByKey() shuffles ALL data!
+Better alternatives: reduceByKey(), aggregateByKey(), combineByKey()
+
+[OPERATION 6] countByKey() - Orders per customer
+
+Total unique customers: 988
+
+Sample counts:
+ Customer  777: 7 orders
+ Customer  763: 7 orders
+ Customer  674: 3 orders
+ Customer   58: 5 orders
+ Customer  895: 6 orders
+ Customer  391: 3 orders
+ Customer   13: 4 orders
+ Customer  127: 8 orders
+ Customer  914: 5 orders
+ Customer  313: 5 orders
+
+[OPERATION 7] sortByKey() - Sort by customer ID
+
+First 10 (sorted by customer ID):
+ Customer    1: $9831.30
+ Customer    1: $6073.87
+ Customer    1: $322.85
+ Customer    1: $1354.01
+ Customer    1: $5928.20
+ Customer    2: $3563.64
+ Customer    2: $8481.88
+ Customer    2: $9117.37
+ Customer    3: $6670.44
+ Customer    3: $7392.14
+
+[OPERATION 8] aggregateByKey() - Stats per customer
+
+Customer statistics (top 5 by total spending):
+
+ Customer 674:
+ Orders: 3, Total: $17,879.30, Avg: $5959.77
+ Min: $1374.97, Max: $8986.05
+
+ Customer 58:
+ Orders: 5, Total: $28,082.47, Avg: $5616.49
+ Min: $104.51, Max: $8674.59
+
+ Customer 914:
+ Orders: 5, Total: $19,450.05, Avg: $3890.01
+ Min: $602.30, Max: $8957.99
+
+ Customer 774:
+ Orders: 6, Total: $27,128.58, Avg: $4521.43
+ Min: $202.41, Max: $9211.30
+
+ Customer 644:
+ Orders: 5, Total: $33,070.24, Avg: $6614.05
+ Min: $261.31, Max: $9673.29
+
+[OPERATION 9] combineByKey() - Calculate average
+
+Top 10 customers by average order value:
+ Customer  560: $9,892.98 average
+ Customer  217: $9,514.99 average
+ Customer   36: $9,438.45 average
+ Customer  676: $9,232.05 average
+ Customer  199: $9,129.64 average
+ Customer  721: $8,936.18 average
+ Customer  633: $8,908.15 average
+ Customer  809: $8,895.70 average
+ Customer  194: $8,878.56 average
+ Customer  243: $8,865.55 average
+
+[OPERATION 10] Analysis by order status
+
+Revenue by status:
+ Cancelled      : $6,632,473.66
+ On Hold        : $6,527,099.85
+ Processing     : $6,207,744.97
+ Shipped        : $6,295,026.05
+
+Detailed statistics by status:
+ Cancelled      : 1287 orders, $6,632,473.66 total, $5,153.44 avg
+ On Hold        : 1253 orders, $6,527,099.85 total, $5,209.18 avg
+ Processing     : 1206 orders, $6,207,744.97 total, $5,147.38 avg
+ Shipped        : 1254 orders, $6,295,026.05 total, $5,019.96 avg
+
+======================================================================
+PERFORMANCE COMPARISON
+======================================================================
+[Stage 32:===========================================>              (6 + 2) / 8]                                                                                groupByKey(): 1.1885s
+[Stage 34:=============================>                            (4 + 4) / 8][Stage 35:==============>                                           (2 + 6) / 8][Stage 35:==================================================>       (7 + 1) / 8]                                                                                reduceByKey(): 1.4678s
+
+ reduceByKey is 0.81x faster!
+Reason: reduceByKey combines locally before shuffling

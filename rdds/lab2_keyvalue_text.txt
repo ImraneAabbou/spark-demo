@@ -1,0 +1,8 @@
+1. Why is reduceByKey() faster than groupByKey()?
+Answer: reduceByKey() performs local aggregation on each partition before shuffling the data across the network, reducing the amount of data transferred whereas groupByKey() shuffles all values for each key across the network, which is slower and more memory intensive.
+
+2. When would you use aggregateByKey() instead of reduceByKey()?
+Answer: Use aggregateByKey() when you need to compute multiple metrics at once (like sum, count, min, max) or when the aggregation function needs different logic.
+
+3. What does mapValues() preserve that map() doesn't?
+Answer: mapValues() preserves the keys of a key-value RDD while only transforming the values, whereas map() transforms each element (key or value) and can change the structure of the RDD.

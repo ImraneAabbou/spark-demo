@@ -1,0 +1,72 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 19:08:34 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+FILTER OPERATIONS
+======================================================================
+[Stage 0:>                                                          (0 + 0) / 1][Stage 0:>                                                          (0 + 1) / 1]                                                                                Total orders: 5000
+
+[FILTER 1] High-value orders (>$5000)
+
+High-value orders: 2566
+Sample high-value orders:
+ Order #1: $7433.89
+ Order #2: $6319.01
+ Order #5: $6440.17
+ Order #6: $8516.34
+ Order #7: $7620.88
+
+[FILTER 2] Shipped orders over $2000
+
+Count: 1019
+Sample:
+ Order #7: Shipped - $7620.88
+ Order #9: Shipped - $7010.02
+ Order #12: Shipped - $8261.53
+
+[FILTER 3] Problem orders (On Hold or Cancelled, >$1000)
+
+Problem orders: 2313
+Sample problem orders:
+ #1: Cancelled - $7433.89
+ #5: Cancelled - $6440.17
+ #6: Cancelled - $8516.34
+ #8: On Hold - $3333.66
+ #10: On Hold - $3861.33
+
+[FILTER 4] Orders from November 2024
+
+November 2024 orders: 0
+
+[FILTER 5] Sample 10% of orders
+
+Original: 5000 orders
+Sample: 489 orders (~10%)
+
+[FILTER 6] Chaining multiple filters
+
+After all filters: 277 orders
+Criteria: Amount > $1000, Status = Shipped, Payment = Credit Card
+
+[FILTER 7] Exclude cancelled orders
+
+Non-cancelled orders: 3713
+
+======================================================================
+PRACTICE EXERCISES
+======================================================================
+
+Complete these exercises:
+1. Filter orders with amount between $1000 and $5000
+2. Find all 'Processing' orders
+3. Get orders from customers #1-100
+4. Find orders with PayPal payment over $2000
+5. Find orders from Q4 2024 (Oct, Nov, Dec)
+
+Orders with amount $1000-$5000: 1987
+'Processing' orders: 1206
+Orders from customers #1-100: 513
+PayPal orders > $2000: 1027
+Q4 orders in Oct, Nov and Dec: 165
