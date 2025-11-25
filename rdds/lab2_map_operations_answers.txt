@@ -1,0 +1,10 @@
+1. What does the map() transformation return?
+Answer: it returns A new RDD with the same number of elements, each element transformed by the provided function.
+
+2. When should you use mapPartitions() instead of map()?
+Answer: map will execute the given function on each row on the RDD while the mapPartitions executes it on partition of rows
+
+3. Can map() change the number of elements in the RDD?
+Answer: it cannot as we saw in it's definition the RDD's length stays the same.
+  x = [x_1, x_2, x_3, ...]
+  x.map(f) = [f(x_1), f(x_2), f(x_3), ...]

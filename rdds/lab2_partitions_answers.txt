@@ -1,0 +1,11 @@
+1. What is the default number of partitions on your machine?
+Answer (1): 8 partitions
+
+2. What happens to execution time as partitions increase from 1 to 16?
+Answer (2): we notice that the number of paritions effects the time of processing, while 1 is and 8+ partitions seem to be slower... 2 and 4 considered faster in my case.
+
+3. What's the difference between repartition() and coalesce() ?
+Answer: the difference is that the first one controls the number of partitions either by increasing through splitting or decreasing through merging the existing while the 2nd one can only merge decrease.
+
+4. When would you use more partitions vs fewer partitions?
+Answer: it depends on quantity of data and the complexity of processing, the bigger quantity and complexity the more partitions needed.
