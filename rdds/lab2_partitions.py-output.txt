@@ -1,0 +1,73 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 18:12:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+UNDERSTANDING RDD PARTITIONS
+======================================================================
+
+[EXPERIMENT 1] Default partitioning
+
+Data size: 100 elements
+Number of partitions: 8
+Default parallelism: 8
+[Stage 0:>                                                          (0 + 8) / 8]                                                                                 Partition 0: 12 elements - [1, 2, 3, 4, 5]...
+ Partition 1: 12 elements - [13, 14, 15, 16, 17]...
+ Partition 2: 12 elements - [25, 26, 27, 28, 29]...
+ Partition 3: 12 elements - [37, 38, 39, 40, 41]...
+ Partition 4: 12 elements - [49, 50, 51, 52, 53]...
+ Partition 5: 12 elements - [61, 62, 63, 64, 65]...
+ Partition 6: 12 elements - [73, 74, 75, 76, 77]...
+ Partition 7: 16 elements - [85, 86, 87, 88, 89]...
+
+[EXPERIMENT 2] Custom number of partitions
+
+2 partitions: 2 partitions
+4 partitions: 4 partitions
+10 partitions: 10 partitions
+
+Distribution with 4 partitions:
+ Partition 0: 25 elements - [1, 2, 3, 4, 5]...
+ Partition 1: 25 elements - [26, 27, 28, 29, 30]...
+ Partition 2: 25 elements - [51, 52, 53, 54, 55]...
+ Partition 3: 25 elements - [76, 77, 78, 79, 80]...
+
+[EXPERIMENT 3] Repartitioning existing RDD
+
+Original partitions: 4
+After repartition(8): 8
+After coalesce(2): 2
+
+[EXPERIMENT 4] Partitioning from files
+
+Text file partitions: 2
+Note: Spark uses minimum of (file_size/128MB, 2) partitions
+With minPartitions=4: 4
+
+[EXPERIMENT 5] Performance impact of partitioning
+
+25/11/25 18:12:55 WARN TaskSetManager: Stage 2 contains a task of very large size (4790 KiB). The maximum recommended task size is 1000 KiB.
+[Stage 2:>                                                          (0 + 1) / 1]                                                                                Partitions:  1 | Time: 0.7587s
+25/11/25 18:12:56 WARN TaskSetManager: Stage 3 contains a task of very large size (2334 KiB). The maximum recommended task size is 1000 KiB.
+Partitions:  2 | Time: 0.5108s
+25/11/25 18:12:56 WARN TaskSetManager: Stage 4 contains a task of very large size (1107 KiB). The maximum recommended task size is 1000 KiB.
+Partitions:  4 | Time: 0.6191s
+[Stage 5:>                                                          (0 + 8) / 8][Stage 5:======================>                                    (3 + 5) / 8]                                                                                Partitions:  8 | Time: 0.7719s
+[Stage 6:=======>                                                  (2 + 8) / 16][Stage 6:=========================>                                (7 + 8) / 16][Stage 6:=============================>                            (8 + 8) / 16][Stage 6:=======================================>                 (11 + 5) / 16]                                                                                Partitions: 16 | Time: 1.2908s
+
+Observation: Too few = underutilized, too many = overhead
+
+======================================================================
+KEY TAKEAWAYS
+======================================================================
+
+1. Default partitions = number of cores in local mode
+2. More partitions = more parallelism (up to a point)
+3. Too many partitions = coordination overhead
+4. Too few partitions = underutilized cluster
+5. Rule of thumb: 2-4 partitions per CPU core
+6. repartition() triggers shuffle (expensive)
+7. coalesce() can avoid shuffle when reducing partitions
+8. File partitions based on splits (typically 128MB)
+
