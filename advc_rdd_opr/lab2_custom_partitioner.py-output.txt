@@ -1,0 +1,183 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/27 23:44:13 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+CUSTOM PARTITIONERS
+======================================================================
+[Stage 0:>                                                          (0 + 1) / 1]                                                                                
+[DEFAULT] Hash-based partitioning
+
+Number of partitions: 2
+Default partition distribution:
+ Partition 0: 50 records
+ Partition 1: 50 records
+
+[CUSTOM 1] Country-based partitioner
+
+[Stage 2:>                                                          (0 + 2) / 2]                                                                                Unique countries: 21
+Countries sample: ['"Belgium"', '"China"', '"France"', '"Germany"', '"Hong Kong"', '"Iceland"', '"Ireland"', '"Japan"', '"Netherlands"', '"New Zealand"']...
+
+Country partition distribution:
+
+ Partition 0:
+  "Belgium": 1 customers
+  "Hong Kong": 1 customers
+  "Netherlands": 1 customers
+  "Saudi Arabia": 1 customers
+  "UAE": 1 customers
+
+ Partition 1:
+  "China": 2 customers
+  "Iceland": 1 customers
+  "New Zealand": 1 customers
+  "Singapore": 2 customers
+  "UK": 5 customers
+
+ Partition 2:
+  "France": 2 customers
+  "Ireland": 2 customers
+  "Norway": 1 customers
+  "Spain": 1 customers
+  Australia: 3 customers
+
+ Partition 3:
+  "Germany": 2 customers
+  "Japan": 2 customers
+  "Portugal": 1 customers
+  "Switzerland": 2 customers
+  Canada: 5 customers
+
+[CUSTOM 2] Segment-based partitioner
+
+Segment partition distribution:
+
+ Partition 0:
+  Enterprise: 34 customers
+
+ Partition 1:
+  Premium: 33 customers
+
+ Partition 2:
+  Regular: 33 customers
+
+[CUSTOM 3] Range-based partitioner (by customer ID)
+
+Range-based partition distribution:
+ Partition 0 (ID 1-250): 100 customers
+ Partition 1 (ID 251-500): 0 customers
+ Partition 2 (ID 501-750): 0 customers
+ Partition 3 (ID 751-1000): 0 customers
+
+[BENEFIT] Co-partitioning for efficient joins
+
+Joining co-partitioned RDDs...
+Join completed in 0.0406s
+[Stage 13:>                                                         (0 + 8) / 8][Stage 13:==============>                                           (2 + 6) / 8]                                                                                Joined records: 498
+Co-partitioning eliminates shuffle in joins!
+
+======================================================================
+WHEN TO USE CUSTOM PARTITIONERS
+======================================================================
+
+Use custom partitioners when:
+
+1. Geographic analysis → partition by country  
+2. Time-series data → partition by date ranges  
+3. Hierarchical data → partition by category  
+4. Skew mitigation → distribute hot keys  
+5. Join optimization → co-partition datasets  
+
+Benefits:
+✓ Less shuffle  
+✓ Faster joins  
+✓ Better parallelism  
+✓ Predictable data placement  
+
+
+======================================================================
+PRACTICE EXERCISES
+======================================================================
+
+1. Partition by first letter of customer name  
+2. Partition orders by amount ranges  
+3. Compare join performance with vs without co-partitioning  
+4. Create composite partitioner (country + segment)  
+5. Document best use cases of custom partitioning  
+
+
+======================================================================
+PRACTICE EXERCISES SOLUTIONS
+======================================================================
+
+[EXERCISE 1] Partition by First Letter of Name
+
+Name Initial partition distribution:
+ Partition 0: 24 customers
+ Partition 1: 20 customers
+ Partition 2: 25 customers
+ Partition 3: 31 customers
+
+[EXERCISE 2] Partition Orders by Amount Ranges
+
+Order Amount Range partition distribution:
+ Partition 0 (Amount $0-2500.0): 1157 orders
+ Partition 1 (Amount $2500.01-5000.0): 1277 orders
+ Partition 2 (Amount $5000.01-7000.0): 983 orders
+ Partition 3 (Amount $7000.01-inf): 1583 orders
+
+[EXERCISE 3] Join Performance Comparison
+
+[Stage 21:=======>                                                  (1 + 7) / 8][Stage 21:==================================================>       (7 + 1) / 8]                                                                                Joining NON-co-partitioned RDDs...
+
+Join Time (WITH Co-Partitioning): 1.3874s (No Shuffle)
+Join Time (WITHOUT Co-Partitioning): 0.7737s (Full Shuffle)
+Difference highlights the benefit of eliminating data movement!
+
+[EXERCISE 4] Composite Partitioner (Country + Segment)
+
+Composite partition distribution (Partition ID: Sample Keys):
+
+ Partition 0:
+  ("France", Regular): 1 customers
+  ("Hong Kong", Enterprise): 1 customers
+  ("Iceland", Premium): 1 customers
+
+ Partition 1:
+  ("Belgium", Premium): 1 customers
+  ("Germany", Enterprise): 1 customers
+  ("New Zealand", Regular): 1 customers
+
+ Partition 2:
+  ("France", Enterprise): 1 customers
+  ("Ireland", Enterprise): 1 customers
+  ("Japan", Premium): 1 customers
+
+ Partition 3:
+  ("China", Enterprise): 2 customers
+  ("Germany", Regular): 1 customers
+  ("Ireland", Premium): 1 customers
+
+======================================================================
+BEST USE CASES OF CUSTOM PARTITIONING (EXERCISE 5)
+======================================================================
+
+The best use cases for custom partitioners revolve around **optimizing performance** and **aligning data structure** for subsequent processing steps.
+
+1.  **Join Optimization (Co-partitioning):**
+    * **Goal:** Eliminate the expensive shuffle phase during a `join` operation.
+    * **Method:** Apply the *exact same* custom partitioner to **both** RDDs involved in the join (e.g., partitioning both Customers and Orders by Customer ID range). This ensures matching keys reside on the same worker node. 
+
+2.  **Handling Data Skew:**
+    * **Goal:** Prevent 'hot keys' (keys with many records) from overloading a single partition, which cripples parallel performance.
+    * **Method:** For heavily skewed keys (e.g., 'USA' in country data), a custom partitioner can strategically assign these hot keys to multiple partitions, distributing the workload.
+
+3.  **Range-based Processing:**
+    * **Goal:** Group sequential or ordered data, such as time series or customer IDs, without unnecessary data movement.
+    * **Method:** A `RangePartitioner` ensures all data for a specific date or ID range lands together, perfect for subsequent range queries or aggregations within a partition.
+
+4.  **Application Logic Grouping:**
+    * **Goal:** Ensure all related data needed for a specific business process is locally available (e.g., all data for 'Enterprise' segment customers).
+    * **Method:** Partition by business-critical categories (like segment, product category, or sales region) to optimize subsequent map or reduce operations on that category.
+

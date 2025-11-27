@@ -1,0 +1,130 @@
+
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/27 23:56:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+PERFORMANCE OPTIMIZATION CHALLENGE
+======================================================================
+
+[CHALLENGE] Find top 10 Enterprise customers by spending
+
+Goal: Optimize the following slow implementation
+
+Running BASELINE (slow) implementation...
+[Stage 0:>                                                          (0 + 4) / 4][Stage 2:>                                                          (0 + 6) / 6][Stage 2:=================================================>         (5 + 1) / 6]                                                                                
+ Baseline time: 5.2529s
+
+Top 10 Enterprise customers:
+ Epsilon Systems               : $57,367.91
+ Quantum Leap AI               : $49,309.30
+ Velocity Motors               : $48,422.22
+ Ironclad Security             : $35,956.34
+ Mega Corp Logistics           : $35,514.26
+ World Wide Web Hosts          : $34,267.22
+ Zenith Security               : $33,431.46
+ Terra Firma Mining            : $32,561.79
+ Oceanic Fisheries             : $32,522.64
+ Digital Frontier              : $30,018.43
+
+======================================================================
+YOUR OPTIMIZED IMPLEMENTATION
+======================================================================
+
+Apply these optimization techniques:
+1. Cache frequently reused RDDs
+2. Filter early (push down predicates)
+3. Use broadcast for small datasets
+4. Reduce shuffles where possible
+
+5. Optimize partitioning
+6. Avoid redundant joins
+Implement your optimizations below:
+
+
+Running OPTIMIZED implementation...
+[Stage 18:==============>                                           (1 + 3) / 4]                                                                                
+ Optimized time: 2.5243s
+ Speedup: 2.08x faster!
+
+Verify results match:
+ Epsilon Systems               : $57,367.91
+ Quantum Leap AI               : $49,309.30
+ Velocity Motors               : $48,422.22
+ Ironclad Security             : $35,956.34
+ Mega Corp Logistics           : $35,514.26
+ World Wide Web Hosts          : $34,267.22
+ Zenith Security               : $33,431.46
+ Terra Firma Mining            : $32,561.79
+ Oceanic Fisheries             : $32,522.64
+ Digital Frontier              : $30,018.43
+
+Run the challenge:
+python lab2_performance_challenge.py
+
+======================================================================
+DOCUMENT YOUR OPTIMIZATIONS
+======================================================================
+
+List the optimizations you applied:
+1. Caching: Cached parsed RDDs to avoid re-parsing
+2. Early filtering: Filtered to Enterprise segment before join
+3. Single aggregation: Combined join and aggregation in one step
+4. Removed redundant join: Carried customer name through pipeline
+5. [Add your optimizations here]
+
+Performance analysis:
+- Baseline shuffles: [count them]
+- Optimized shuffles: [count them]
+- Memory usage: [observe in Spark UI]
+- Task distribution: [check Spark UI]
+
+Further improvements possible:
+- [Your ideas here]
+
+
+======================================================================
+YOUR OPTIMIZED IMPLEMENTATION
+======================================================================
+
+Running OPTIMIZED implementation (Single Shuffle Aggregation)...
+[Stage 32:>                                                         (0 + 4) / 4]                                                                                
+ Optimized time: 2.2106s
+ Speedup: 2.38x faster!
+
+Verify results match:
+ Epsilon Systems               : $57,367.91
+ Quantum Leap AI               : $49,309.30
+ Velocity Motors               : $48,422.22
+ Ironclad Security             : $35,956.34
+ Mega Corp Logistics           : $35,514.26
+ World Wide Web Hosts          : $34,267.22
+ Zenith Security               : $33,431.46
+ Terra Firma Mining            : $32,561.79
+ Oceanic Fisheries             : $32,522.64
+ Digital Frontier              : $30,018.43
+
+Run the challenge:
+python lab2_performance_challenge.py
+
+======================================================================
+DOCUMENT YOUR OPTIMIZATIONS
+======================================================================
+
+List the optimizations you applied:
+1. Caching: Cached parsed RDDs (`customers_rdd`, `orders_rdd`) to avoid re-parsing on multiple subsequent actions.
+2. Early Filtering: Filtered the large `customers_rdd` to `enterprise_customers_only` **before** the join (Push Down Predicates). This drastically reduces the data size entering the first shuffle.
+3. Removed Redundant Join: The baseline performed `totals.join(customers_rdd)`. The optimized code carries the customer name (`x[1][0]['name']`) across the *first* join, eliminating the need for the second join entirely.
+4. Reduced Shuffles: The baseline required **3 shuffles** (Join 1, ReduceByKey, Join 2). The optimized code requires only **2 shuffles** (Join, ReduceByKey). 
+
+Performance analysis:
+- Baseline shuffles: **3** (Join, ReduceByKey, Join)
+- Optimized shuffles: **2** (Join, ReduceByKey)
+- Memory usage: Reduced due to early filtering.
+- Task distribution: The tasks are better balanced after filtering.
+
+Further improvements possible:
+- **Co-partitioning:** If both `enterprise_customers_only` and `orders_rdd` were partitioned by the same custom Partitioner (e.g., `RangePartitioner` on `customer_id`), the initial `join` shuffle could be eliminated, reducing the total shuffle count to **1** (`reduceByKey`).
+- **Broadcast Join:** If the filtered `enterprise_customers_only` dataset is very small (a few thousand records), converting it to a broadcast variable (`sc.broadcast`) and using a map-side join would eliminate the join shuffle entirely, achieving a total of **1 shuffle** (`reduceByKey`).
+

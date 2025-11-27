@@ -1,0 +1,128 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/27 21:11:25 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+RDD PERSISTENCE STRATEGIES
+======================================================================
+
+[EXPERIMENT 1] Without caching - Multiple actions
+
+[Stage 0:>                                                          (0 + 8) / 8]                                                                                First count:  333333 | Time: 1.9188s
+Sum: 333333666666 | Time: 0.6095s
+Max:    1999998 | Time: 0.7017s
+
+ Total time without cache: 3.2300s
+ Note: Each action recomputes the entire pipeline
+
+[EXPERIMENT 2] With cache() - MEMORY_ONLY
+
+[Stage 3:>                                                          (0 + 8) / 8]                                                                                First count (materialize):  333333 | Time: 1.5657s
+Sum (from cache): 333333666666 | Time: 0.6262s ⚡
+[Stage 5:============================================>              (6 + 2) / 8]                                                                                Max (from cache):    1999998 | Time: 0.6609s ⚡
+
+ Total time with cache: 2.8528s
+ Speedup: 1.13x faster
+
+[EXPERIMENT 3] Comparing storage levels
+
+Storage Level Comparison:
+Level                     Materialize     Read           
+-------------------------------------------------------
+[Stage 6:>                                                          (0 + 8) / 8][Stage 6:======================>                                    (3 + 5) / 8]                                                                                MEMORY_ONLY               1.2981          0.1941         
+[Stage 8:>                                                          (0 + 8) / 8][Stage 8:==============>                                            (2 + 6) / 8]                                                                                MEMORY_AND_DISK           1.1525          0.1700         
+[Stage 10:>                                                         (0 + 8) / 8]                                                                                DISK_ONLY                 1.1111          0.1686         
+
+[EXPERIMENT 4] When caching helps vs hurts
+
+Scenario 1: Multiple uses (caching HELPS)
+[Stage 12:>                                                         (0 + 8) / 8][Stage 12:====================================>                     (5 + 3) / 8]                                                                                 Time with cache: 1.8489s
+
+Scenario 2: Single use (caching WASTES resources)
+[Stage 15:>                                                         (0 + 8) / 8][Stage 15:=======>                                                  (1 + 7) / 8]                                                                                 Time with cache (but used once): 0.8933s
+ Cache overhead wasted!
+
+Scenario 3: Cheap computation (caching NOT worth it)
+[Stage 16:>                                                         (0 + 8) / 8]                                                                                 Time with cache: 1.2274s
+ Recomputing would be faster than caching overhead
+
+Scenario 4: Expensive computation, multiple uses (caching HELPS)
+[Stage 18:>                                                         (0 + 8) / 8][Stage 18:=======>                                                  (1 + 7) / 8][Stage 18:===========================================>              (6 + 2) / 8]                                                                                 Time with cache: 1.9118s
+ Cache saves expensive recomputation!
+
+[EXPERIMENT 5] Checkpoint for long lineage
+
+Lineage length before checkpoint: ~10 transformations
+Risk: Long recovery time on failure
+[Stage 21:>                                                         (0 + 8) / 8][Stage 21:==============>                                           (2 + 6) / 8]                                                                                
+ After checkpoint:
+ - Lineage is truncated
+ - Data saved to reliable storage
+ - Faster recovery on failure
+
+======================================================================
+STORAGE LEVEL DECISION GUIDE
+======================================================================
+
+MEMORY_ONLY (default):
+✓ Use when: Data fits in memory, fastest access needed
+✓ Pros: Fastest, no serialization overhead
+✗ Cons: May fail with OOM, data loss if evicted
+
+MEMORY_AND_DISK:
+✓ Use when: Safe fallback needed, data might not fit
+✓ Pros: Won't fail with OOM, spillover to disk
+✗ Cons: Slower disk access for spilled partitions
+
+MEMORY_ONLY_SER:
+✓ Use when: Memory constrained, willing to trade CPU for space
+✓ Pros: Smaller memory footprint
+✗ Cons: Serialization/deserialization overhead
+
+MEMORY_AND_DISK_SER:
+✓ Use when: Large dataset, memory limited, safe fallback
+✓ Pros: Space efficient with disk spillover
+✗ Cons: Serialization + disk I/O overhead
+
+DISK_ONLY:
+✓ Use when: Memory very limited, cost-effective storage
+✓ Pros: Always works, predictable
+✗ Cons: Slowest option
+
+OFF_HEAP:
+✓ Use when: Large memory available, avoid GC
+✓ Pros: No GC overhead, precise memory control
+✗ Cons: Complex configuration, external memory needed
+
+
+======================================================================
+CACHING BEST PRACTICES
+======================================================================
+
+When to cache:
+- RDD used multiple times in same job
+- Iterative algorithms (ML training)
+- Interactive queries on same dataset
+- Expensive transformations worth saving
+- Intermediate results in complex pipelines
+
+When NOT to cache:
+- RDD used only once
+- Large RDDs that don't fit in memory
+- Cheap transformations
+- Low memory environment
+- Data that changes frequently
+
+
+======================================================================
+PRACTICE EXERCISES
+======================================================================
+
+Complete these exercises:
+1. Create an iterative algorithm and measure cache benefit
+2. Test different storage levels with your data
+3. Implement checkpoint for a 20-step transformation
+4. Monitor Spark UI Storage tab during caching
+5. Compare memory usage of serialized vs non-serialized
+

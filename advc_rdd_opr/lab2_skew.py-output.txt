@@ -1,0 +1,103 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/11/25 20:10:07 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+======================================================================
+HANDLING DATA SKEW
+======================================================================
+
+[PROBLEM] Creating skewed dataset
+
+[Stage 0:>                                                          (0 + 4) / 4]                                                                                Key distribution:
+ popular        :  8000 records (80.0%)
+ rare_0         :   100 records (1.0%)
+ rare_1         :   100 records (1.0%)
+ rare_2         :   100 records (1.0%)
+ rare_3         :   100 records (1.0%)
+
+Total unique keys: 21
+ Notice: 'popular' has 80% of all data (SKEWED!)
+
+[IMPACT] Performance impact of skew
+
+[Stage 1:>                                                          (0 + 4) / 4]                                                                                Aggregation with skew: 1.2159s
+Problem: One partition processes 80% of data!
+
+[SOLUTION 1] Salting to handle skew
+
+Salted key distribution (sample):
+ popular_salt3            :  981 records
+ popular_salt0            : 1020 records
+ popular_salt1            : 1004 records
+ popular_salt4            : 1031 records
+ popular_salt6            : 1022 records
+ popular_salt5            :  969 records
+ popular_salt7            :  970 records
+ popular_salt2            : 1003 records
+ rare_0_salt2             :   12 records
+ rare_1_salt0             :   11 records
+
+Salted aggregation: 0.0324s
+ Improvement: 37.48x faster
+Why: Work distributed across 8 partitions instead of 1
+
+[SOLUTION 2] Separate processing for hot keys
+
+Hot keys (>1000 records): {'popular'}
+Hot data records: 8000
+Cold data records: 2000
+
+Separate processing: 0.0646s
+[Stage 7:============================================>              (3 + 1) / 4][Stage 9:>                                                          (0 + 4) / 4][Stage 9:==============>                                            (1 + 3) / 4]                                                                                Final result: 21 unique keys
+
+[SOLUTION 3] Increase partitions for skewed keys
+
+Original partitions: 4
+After repartition: 16
+With more partitions: 0.0186s
+Effect: More parallel tasks, but still some skew
+
+[SOLUTION 4] Two-phase aggregation
+
+Two-phase result: 21 keys
+Advantage: Combines benefits of salting with clean final output
+
+======================================================================
+IDENTIFYING SKEW IN SPARK UI
+======================================================================
+
+Signs of data skew in Spark UI:
+1. Task Duration Distribution:
+   - Most tasks complete quickly
+   - A few tasks take much longer (long tail)
+
+2. Shuffle Read/Write:
+   - Uneven distribution across tasks
+
+3. Stage Timeline:
+   - Many executors finish early
+   - One or two executors keep running (hot partitions)
+
+4. GC Time:
+   - Slow tasks show high GC time due to memory pressure
+
+How to inspect:
+✓ Open Spark UI at http://localhost:4040
+✓ Check Stages tab
+✓ Look at task duration histogram
+✓ Examine shuffle read size per task
+✓ Monitor GC time
+
+
+======================================================================
+PRACTICE EXERCISES
+======================================================================
+
+Complete these exercises:
+1. Create your own skewed dataset (90% one key, 10% others)
+2. Measure performance without optimization
+3. Apply salting with different salt counts (4, 8, 16)
+4. Compare performance improvements
+5. Document when salting helps vs hurts
+
